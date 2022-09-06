@@ -5,7 +5,7 @@ import Input from "./GlobalComponents/Input";
 export default function SingUp () {
     return(
         <>
-            <Page>
+            <Screen>
                 <Title>MyWallet</Title>
                 <PageForm>
                     <form>
@@ -17,12 +17,12 @@ export default function SingUp () {
                     </form>
                 </PageForm>
                 <Link to="/"><Text>Já tem uma conta? Entre agora!</Text></Link>
-            </Page>
+            </Screen>
         </>
     );
 }
 
-const Page = styled.div`
+const Screen = styled.div`
     width: 375px;
     height: 667px;
     background-color: #8C11BE;
