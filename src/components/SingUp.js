@@ -1,0 +1,70 @@
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import Input from "./GlobalComponents/Input";
+
+export default function SingUp () {
+    return(
+        <>
+            <Page>
+                <Title>MyWallet</Title>
+                <PageForm>
+                    <form>
+                        <Input type="text" placeholder="   Nome"></Input>
+                        <Input type="email" placeholder="   E-mail"></Input>
+                        <Input type="password" placeholder="   Senha"></Input>
+                        <Input type="password" placeholder="   Confirme a senha"></Input>
+                        <button>Cadastrar</button>
+                    </form>
+                </PageForm>
+                <Link to="/"><Text>Já tem uma conta? Entre agora!</Text></Link>
+            </Page>
+        </>
+    );
+}
+
+const Page = styled.div`
+    width: 375px;
+    height: 667px;
+    background-color: #8C11BE;
+`;
+
+const Title =  styled.div`
+    font-family: 'Saira Stencil One';
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 50.37px;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 95px 0 24px 0;
+`;
+
+const PageForm = styled.div`
+    width: 100%;
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    button {
+        width: 85%;
+        height: 46px;
+        border-radius: 5px;
+        border: none;
+        background-color: #A328D6;
+        font-family: 'Raleway';
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 23.48px;
+        color: #FFFFFF;
+    }
+`;
+
+const Text = styled.div`
+    margin: 36px 0 0 0;
+    font-family: 'Raleway';
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 17.61px;
+    color: #FFFFFF;
+    text-align: center;
+`;
