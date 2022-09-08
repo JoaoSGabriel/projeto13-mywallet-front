@@ -1,17 +1,48 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Input from "./GlobalComponents/Input";
 
 export default function SingIn () {
+    const navigate = useNavigate();
+
+    const [able, setAble] = useState(false);
+    const [account_Email, setAccount_Email] = useState([]);
+    const [account_Password, setAccount_Password] = useState([]);
+
+    function login (e) {
+        e.preventDefault();
+        setAble(true);
+
+        const data_Login = {
+            email: account_Email,
+            password: account_Password
+        }
+
+        const promisse = axios.post("http://localhost:5000/sign-in", data_Login);
+
+        promisse.then(() => {
+            setAccount_Email('');
+            setAccount_Password('');
+            navigate('/Home')
+        }).catch(() => {
+            setAccount_Email('');
+            setAccount_Password('');
+            alert('Ops! Algo deu errado com a sua solicitação, tente novamente');
+            setAble(false);
+        });
+    }
+
     return(
         <>
             <Screen>
                 <Title>MyWallet</Title>
                 <PageForm>
-                    <form>
-                        <Input type="email" placeholder="   E-mail"></Input>
-                        <Input type="password" placeholder="   Senha"></Input>
-                        <button>Entrar</button>
+                    <form onSubmit={login}>
+                        <Input type="email" placeholder="   E-mail" onChange={e => setAccount_Email(e.target.value)} value={account_Email} required readOnly={able}></Input>
+                        <Input type="password" placeholder="   Senha" onChange={e => setAccount_Password(e.target.value)} value={account_Password} required readOnly={able}></Input>
+                        <button type="submit">Entrar</button>
                     </form>
                 </PageForm>
                 <Link to="/SingUp"><Text>Primeira vez? Cadastre-se!</Text></Link>
