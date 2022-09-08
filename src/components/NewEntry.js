@@ -1,14 +1,50 @@
+import axios from "axios";
+import dayjs from "dayjs";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Input from "./GlobalComponents/Input";
 
 export default function NewEntry () {
+    const navigate = useNavigate();
+
+    const [description, setDescription] = useState('');
+    const [value, setValue] = useState('');
+    const [able, setAble] = useState(false);
+
+    function saveSpent (e) {
+        e.preventDefault();
+        setAble(true);
+
+        const register = {
+            date: dayjs().format('DD/MM'),
+            description: '',
+            value: '',
+            type: 'entrada'
+        }
+        console.log(register)
+
+        const promisse = axios.post("https://localhost:5000/new-spent", register);
+
+        promisse.then(() => {
+            setValue('');
+            setDescription('');
+            navigate('/Home');
+        }).catch(() => {
+            setValue('');
+            setDescription('');
+            alert('Ops! Parece que algo deu errado com a sua solicitação.')
+            setAble(false);
+        })
+    }
+
     return(
         <>
             <Screen>
                 <Title>Nova Entrada</Title>
-                <form>
-                    <Input placeholder="   Valor"></Input>
-                    <Input placeholder="   Descrição"></Input>
+                <form onSubmit={saveSpent}>
+                    <Input type="number" placeholder="   Valor" onChange={e => setValue(e.target.value)} value={value} required readOnly={able}></Input>
+                    <Input type="text" placeholder="   Descrição" onChange={e => setDescription(e.target.value)} value={description} required readOnly={able}></Input>
                     <button type="submit">Salvar entrada</button>
                 </form>
             </Screen>

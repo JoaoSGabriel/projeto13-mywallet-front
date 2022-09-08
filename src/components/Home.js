@@ -3,7 +3,29 @@ import { Link } from "react-router-dom";
 import { IoExitOutline } from 'react-icons/io5'
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from 'react-icons/ai'
 
+function Spents (props) {
+    const {date, description, value, type} = props;
+
+    return(
+        <>
+            {type === 'entrada' ? (
+                <Spent>
+                    <h1>{date}<en>{description}</en></h1>
+                    <h2>{value}</h2>
+                </Spent>
+            ): (
+                <Spent>
+                    <h1>{date}<en>{description}</en></h1>
+                    <h3>{value}</h3>
+                </Spent>
+            )}
+        </>
+    );
+}
+
 export default function Home () {
+    const carteira = [];
+
     return(
         <>
             <Screen>
@@ -11,7 +33,13 @@ export default function Home () {
                     <p>Olá, Fulano</p>
                     <IoExitOutline />
                 </Title>
-                <Wallet></Wallet>
+                <Wallet>
+                    {carteira.length === 0 ? (
+                        <p>Não há registros de<br/>entrada ou saída</p>
+                    ) : (
+                        carteira.map(value => <Spents date={value.date} description={value.description} value={value.value} type={value.type}/>)
+                    )}
+                </Wallet>
                 <Buttons>
                     <Link to="/NewEntry">
                     <div>
@@ -59,7 +87,48 @@ const Wallet = styled.div`
     height: 446px;
     background-color: #FFFFFF;
     margin: 22px auto 0 auto;
+    padding: 0 0 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow-y: scroll;
+    p {
+        font-family: 'Raleway';
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 23.52px;
+        text-align: center;
+        color: #868686;
+        margin: 200px 0 0 0;
+    }
+`;
+
+const Spent = styled.div`
+    width: 90%;
+    margin: 12px auto 0 auto;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Raleway';
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18.78px;
+    h1 {
+        color: #C6C6C6;
+    }
+    en {
+        margin: 0 0 0 10px;
+        color: #000000;
+    }
+    h2 {
+        color: #03AC00;
+        display: flex;
+        align-items: center;
+    }
+    h3 {
+        color: #C70000;
+        display: flex;
+        align-items: center;
+    }
 `;
 
 const Buttons = styled.div`
