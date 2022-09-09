@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { IoExitOutline } from 'react-icons/io5'
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from 'react-icons/ai'
+import { useContext, useEffect, useState } from "react";
+import UserContext from "./contexts/UserCOntext";
+import axios from "axios";
 
 function Spents (props) {
     const {date, description, value, type} = props;
@@ -24,20 +27,36 @@ function Spents (props) {
 }
 
 export default function Home () {
-    const carteira = [];
+    const {user_Token, server_Data} = useContext(UserContext);
+
+    const [wallet, setWallet] = useState([]);
+
+    useEffect(() => {
+        const promisse = axios.get('http://localhost:5000/my-wallet', {
+            headers: {
+                Authorization: `Bearer ${user_Token}`
+            }
+        });
+        
+        promisse.then((res) => {
+            setWallet(res.data);
+        }).catch(error => {
+            console.log(error)
+        });
+    }, [user_Token])
 
     return(
         <>
             <Screen>
                 <Title>
-                    <p>Olá, Fulano</p>
+                    <p>olá, {server_Data.name}</p>
                     <IoExitOutline />
                 </Title>
                 <Wallet>
-                    {carteira.length === 0 ? (
+                    {wallet.length === 0 ? (
                         <p>Não há registros de<br/>entrada ou saída</p>
                     ) : (
-                        carteira.map(value => <Spents date={value.date} description={value.description} value={value.value} type={value.type}/>)
+                        wallet.map((value, index) => <Spents key={index} date={value.date} description={value.description} value={value.value} type={value.type}/>)
                     )}
                 </Wallet>
                 <Buttons>
@@ -68,7 +87,7 @@ const Screen = styled.div`
 const Title = styled.div`
     width: 90%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin: 0 auto;
     padding: 25px 0 0 0;
     font-family: 'Raleway';
@@ -77,9 +96,7 @@ const Title = styled.div`
     line-height: 30.52px;
     text-align: center;
     color: #FFFFFF;
-    p {
-        margin-right: 170px;
-    }
+    
 `;
 
 const Wallet = styled.div`

@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import UserContext from "./contexts/UserCOntext";
 import Input from "./GlobalComponents/Input";
 
 export default function SingIn () {
     const navigate = useNavigate();
+    const {setUser_Token, setServer_Data} = useContext(UserContext)
 
     const [able, setAble] = useState(false);
     const [account_Email, setAccount_Email] = useState([]);
@@ -22,10 +24,12 @@ export default function SingIn () {
 
         const promisse = axios.post("http://localhost:5000/sign-in", data_Login);
 
-        promisse.then(() => {
+        promisse.then((res) => {
             setAccount_Email('');
             setAccount_Password('');
-            navigate('/Home')
+            setServer_Data(res.data);
+            setUser_Token(res.data.token);
+            navigate('/Home');
         }).catch(() => {
             setAccount_Email('');
             setAccount_Password('');
