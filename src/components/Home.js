@@ -8,6 +8,7 @@ import axios from "axios";
 
 function Spents (props) {
     const {id, date, description, value, type, user_Token, reload, setReload} = props;
+    const navigate = useNavigate();
 
     function deleteSpent () {
         const answer = window.confirm('Você gostaria de apagar esta transação?');
@@ -25,11 +26,19 @@ function Spents (props) {
         }
     }
 
+    function edit_Spent_Entry () {
+        navigate(`/EditEntry/${id}`);
+    }
+
+    function edit_Spent_Output () {
+        navigate(`/EditOutput/${id}`);
+    }
+
     return(
         <>
             {type === 'entrada' ? (
                 <Spent>
-                    <h1>{date}<en>{description}</en></h1>
+                    <h1 onClick={edit_Spent_Entry}>{date}<en>{description}</en></h1>
                     <LeftSpent>
                         <h2>{value}</h2>
                         <h4 onClick={deleteSpent}>X</h4>
@@ -37,7 +46,7 @@ function Spents (props) {
                 </Spent>
             ): (
                 <Spent>
-                    <h1>{date}<en>{description}</en></h1>
+                    <h1 onClick={edit_Spent_Output}>{date}<en>{description}</en></h1>
                     <LeftSpent>
                         <h3>{value}</h3>
                         <h4 onClick={deleteSpent}>X</h4>

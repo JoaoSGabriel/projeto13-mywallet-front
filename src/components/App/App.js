@@ -6,6 +6,8 @@ import SingUp from '../SingUp';
 import Home from '../Home';
 import NewEntry from '../NewEntry';
 import NewOutPut from '../NewOutPut';
+import EditEntry from '../EditEntry'
+import EditOutput from '../EditOutput'
 import { useState } from 'react';
 
 export default function App() {
@@ -23,6 +25,8 @@ export default function App() {
           <Route path="/Home" element={<Home />} />
           <Route path="/NewEntry" element={<NewEntry/>} />
           <Route path="/NewOutPut" element={<NewOutPut/>} />
+          <Route path="/EditEntry/:id" element={<EditEntry />} />
+          <Route path="/EditOutput/:id" element={<EditOutput />} />
         </Routes>
       </BrowserRouter>
     </UserContext.Provider>
