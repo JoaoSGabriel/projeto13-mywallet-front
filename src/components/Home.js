@@ -63,6 +63,7 @@ export default function Home () {
 
     const [wallet, setWallet] = useState([]);
     const [reload, setReload] = useState(true);
+    const [totalSpent, setTotalSpent] = useState(0)
 
     useEffect(() => {
         const promisse = axios.get('http://localhost:5000/my-wallet', {
@@ -73,17 +74,31 @@ export default function Home () {
         
         promisse.then((res) => {
             setWallet(res.data);
+            let cache = 0;
+            for (let i = 0; i < res.data.length; i = i + 1) {
+                if (res.data[i].type === 'entrada') {
+                    cache = cache + Number(res.data[i].value);
+                } else {
+                    cache = cache - Number(res.data[i].value);
+                }
+            }
+            setTotalSpent(cache.toFixed(2));
         }).catch(() => {
             navigate('/');
         });
-    }, [user_Token, navigate, reload])
+
+    }, [user_Token, navigate, reload]);
+
+    function logout () {
+        window.location.reload();
+    }
 
     return(
         <>
             <Screen>
                 <Title>
                     <p>olá, {server_Data.name}</p>
-                    <IoExitOutline />
+                    <IoExitOutline onClick={logout}/>
                 </Title>
                 <Wallet>
                     {wallet.length === 0 ? (
@@ -92,6 +107,14 @@ export default function Home () {
                         wallet.map((value, index) => <Spents key={index} id={value._id} date={value.date} description={value.description} value={value.value} type={value.type} user_Token={user_Token} reload={reload} setReload={setReload}/>)
                     )}
                 </Wallet>
+                <Total>
+                    <p>SALDO</p>
+                    {totalSpent > 0 ? (
+                        <h1>{totalSpent}</h1>
+                    ) : (
+                        <h2>{totalSpent}</h2>
+                    )}
+                </Total>
                 <Buttons>
                     <Link to="/NewEntry">
                     <div>
@@ -134,7 +157,7 @@ const Title = styled.div`
 
 const Wallet = styled.div`
     width: 90%;
-    height: 446px;
+    height: 404px;
     background-color: #FFFFFF;
     margin: 22px auto 0 auto;
     padding: 0 0 0 0;
@@ -188,6 +211,34 @@ const LeftSpent = styled.div`
         color: #C6C6C6;
         margin-left: 11px;
         cursor: pointer;
+    }
+`;
+
+const Total = styled.div`
+    width: 90%;
+    height: 42px;
+    margin: 0 auto;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 5%;
+    font-family: 'Raleway';
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18.78px;
+    p {
+        font-family: 'Raleway';
+        font-weight: 700;
+        font-size: 17px;
+        line-height: 19.96px;
+    }
+    h1 {
+        color: #03AC00;
+    }
+    h2 {
+        color: #C70000;
     }
 `;
 
