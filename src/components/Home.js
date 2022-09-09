@@ -7,19 +7,41 @@ import UserContext from "./contexts/UserCOntext";
 import axios from "axios";
 
 function Spents (props) {
-    const {date, description, value, type} = props;
+    const {id, date, description, value, type, user_Token, reload, setReload} = props;
+
+    function deleteSpent () {
+        const answer = window.confirm('Você gostaria de apagar esta transação?');
+        if (answer === true) {
+            const promisse = axios.delete(`http://localhost:5000/my-wallet/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${user_Token}`
+                }
+            });
+            promisse.then(() => {
+                setReload(!reload);
+            }).catch();
+        } else {
+            return;
+        }
+    }
 
     return(
         <>
             {type === 'entrada' ? (
                 <Spent>
                     <h1>{date}<en>{description}</en></h1>
-                    <h2>{value}</h2>
+                    <LeftSpent>
+                        <h2>{value}</h2>
+                        <h4 onClick={deleteSpent}>X</h4>
+                    </LeftSpent>
                 </Spent>
             ): (
                 <Spent>
                     <h1>{date}<en>{description}</en></h1>
-                    <h3>{value}</h3>
+                    <LeftSpent>
+                        <h3>{value}</h3>
+                        <h4 onClick={deleteSpent}>X</h4>
+                    </LeftSpent>
                 </Spent>
             )}
         </>
@@ -31,6 +53,7 @@ export default function Home () {
     const {user_Token, server_Data} = useContext(UserContext);
 
     const [wallet, setWallet] = useState([]);
+    const [reload, setReload] = useState(true);
 
     useEffect(() => {
         const promisse = axios.get('http://localhost:5000/my-wallet', {
@@ -44,7 +67,7 @@ export default function Home () {
         }).catch(() => {
             navigate('/');
         });
-    }, [user_Token, navigate])
+    }, [user_Token, navigate, reload])
 
     return(
         <>
@@ -57,7 +80,7 @@ export default function Home () {
                     {wallet.length === 0 ? (
                         <p>Não há registros de<br/>entrada ou saída</p>
                     ) : (
-                        wallet.map((value, index) => <Spents key={index} date={value.date} description={value.description} value={value.value} type={value.type}/>)
+                        wallet.map((value, index) => <Spents key={index} id={value._id} date={value.date} description={value.description} value={value.value} type={value.type} user_Token={user_Token} reload={reload} setReload={setReload}/>)
                     )}
                 </Wallet>
                 <Buttons>
@@ -135,6 +158,7 @@ const Spent = styled.div`
     line-height: 18.78px;
     h1 {
         color: #C6C6C6;
+        cursor: pointer;
     }
     en {
         margin: 0 0 0 10px;
@@ -142,13 +166,19 @@ const Spent = styled.div`
     }
     h2 {
         color: #03AC00;
-        display: flex;
-        align-items: center;
     }
     h3 {
         color: #C70000;
-        display: flex;
-        align-items: center;
+    }
+`;
+
+const LeftSpent = styled.div`
+    display: flex;
+    align-items: center;
+    h4 {
+        color: #C6C6C6;
+        margin-left: 11px;
+        cursor: pointer;
     }
 `;
 
@@ -172,6 +202,7 @@ const Buttons = styled.div`
         font-size: 17px;
         line-height: 20px;
         color: #FFFFFF;
+        cursor: pointer;
     }
     p {
         margin: 31px 0 0 0;
