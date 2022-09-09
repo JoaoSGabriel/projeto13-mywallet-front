@@ -1,12 +1,14 @@
 import axios from "axios";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import UserContext from "./contexts/UserCOntext";
 import Input from "./GlobalComponents/Input";
 
 export default function NewEntry () {
     const navigate = useNavigate();
+    const {user_Token} = useContext(UserContext);
 
     const [description, setDescription] = useState('');
     const [value, setValue] = useState('');
@@ -18,13 +20,16 @@ export default function NewEntry () {
 
         const register = {
             date: dayjs().format('DD/MM'),
-            description: '',
-            value: '',
+            description: description,
+            value: value,
             type: 'saída'
         }
-        console.log(register)
 
-        const promisse = axios.post("https://localhost:5000/new-spent", register);
+        const promisse = axios.post("http://localhost:5000/new-spent", register, {
+            headers: {
+                Authorization: `Bearer ${user_Token}`
+            }
+        });
 
         promisse.then(() => {
             setValue('');

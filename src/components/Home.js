@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoExitOutline } from 'react-icons/io5'
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from 'react-icons/ai'
 import { useContext, useEffect, useState } from "react";
@@ -27,6 +27,7 @@ function Spents (props) {
 }
 
 export default function Home () {
+    const navigate = useNavigate();
     const {user_Token, server_Data} = useContext(UserContext);
 
     const [wallet, setWallet] = useState([]);
@@ -40,10 +41,10 @@ export default function Home () {
         
         promisse.then((res) => {
             setWallet(res.data);
-        }).catch(error => {
-            console.log(error)
+        }).catch(() => {
+            navigate('/');
         });
-    }, [user_Token])
+    }, [user_Token, navigate])
 
     return(
         <>
@@ -109,6 +110,9 @@ const Wallet = styled.div`
     flex-direction: column;
     align-items: center;
     overflow-y: scroll;
+    ::-webkit-scrollbar {
+        display: none;
+    }
     p {
         font-family: 'Raleway';
         font-weight: 400;
