@@ -21,7 +21,7 @@ export default function NewEntry () {
         const register = {
             date: dayjs().format('DD/MM'),
             description: description,
-            value: value,
+            value: value.toFixed(2),
             type: 'entrada'
         }
 
@@ -48,7 +48,7 @@ export default function NewEntry () {
             <Screen>
                 <Title>Nova Entrada</Title>
                 <form onSubmit={saveSpent}>
-                    <Input type="number" placeholder="   Valor" onChange={e => setValue(e.target.value)} value={value} required readOnly={able}></Input>
+                    <Input type="number" placeholder="   Valor" onChange={e => setValue(Number(e.target.value))} value={value} required readOnly={able}></Input>
                     <Input type="text" placeholder="   Descrição" onChange={e => setDescription(e.target.value)} value={description} required readOnly={able}></Input>
                     <button type="submit">Salvar entrada</button>
                 </form>
